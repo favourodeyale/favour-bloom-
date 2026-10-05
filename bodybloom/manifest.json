@@ -1,0 +1,15 @@
+{
+  "name": "BodyBloom",
+  "short_name": "BodyBloom",
+  "description": "Log weight, body fat, measurements and progress photos as a weekly record.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FCFAF2",
+  "theme_color": "#C94A33",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="BodyBloom">
+<meta name="theme-color" content="#C94A33">
+<title>BodyBloom</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FCFAF2;--card:#FFFFFF;--ink:#2B2A1E;--muted:#6E6B58;--line:#ECE6D2;
+  --plum:#C94A33;--onplum:#FFFFFF;--lilac:#DCE6FA;--lilacInk:#2F4C8A;
+  --mint:#E3F0DC;--mintInk:#3D6B3A;--danger:#B3261E;
+  --leaf:#6FA76B;--corn:#6C8FD6;--butter:#F5CB4B;--petal:#FFF4E8;--butterSoft:#FDF1C7;--butterInk:#6B5410;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"DM Sans","Helvetica Neue",Arial,system-ui,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  --bg:#1A1A12;--card:#24241A;--ink:#F4F1E4;--muted:#B3AE95;--line:#3A392A;
+  --plum:#F28A75;--onplum:#2B1410;--lilac:#263555;--lilacInk:#CFDCF7;
+  --mint:#22361F;--mintInk:#C6E6BE;--danger:#F2B8B5;
+  --leaf:#8CC488;--corn:#93AEE6;--butter:#F5CB4B;--petal:#FFF4E8;--butterSoft:#3D3416;--butterInk:#F5DE94;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+.app{max-width:560px;margin:0 auto;padding:0 16px 110px}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 0 8px}
+.brand{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:-.02em;margin:0}
+.iconbtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;font-size:18px}
+h2{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em;margin:22px 0 10px}
+h3{font-family:var(--display);font-weight:500;font-size:17px;margin:0 0 8px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.stack>*+*{margin-top:12px}
+
+.tape{position:relative;margin:6px 0 4px;padding:14px 16px 12px;border-radius:18px;background:var(--plum);color:var(--onplum);overflow:hidden}
+.tape .flowers{position:absolute;right:-8px;top:-6px;width:150px;height:110px;pointer-events:none}
+.tape .big,.tape .sub,.tape .ruler{position:relative}
+.tape .big{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;letter-spacing:-.03em}
+.tape .sub{font-size:14px;opacity:.85;margin-top:4px}
+.ruler{margin-top:14px;height:26px;position:relative;
+  background:
+   repeating-linear-gradient(90deg,currentColor 0 2px,transparent 2px 40px) bottom/100% 14px no-repeat,
+   repeating-linear-gradient(90deg,currentColor 0 1px,transparent 1px 8px) bottom/100% 7px no-repeat;
+  opacity:.9}
+.ruler .mark{position:absolute;bottom:2px;width:22px;height:22px;transform:translateX(-11px)}
+
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+label.f{display:block}
+label.f span{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+input[type=number],input[type=date],select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:44px}
+textarea{min-height:70px;resize:vertical}
+details{border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+summary{cursor:pointer;font-weight:500}
+details[open] summary{margin-bottom:10px}
+.photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ph{position:relative;aspect-ratio:3/4;border:1.5px dashed var(--leaf);border-radius:50% 50% 16px 16px/28% 28% 16px 16px;display:grid;place-items:center;text-align:center;font-size:12px;color:var(--muted);overflow:hidden;background:var(--bg)}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.ph .x{position:absolute;top:4px;right:4px;z-index:2;width:26px;height:26px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:14px;line-height:1}
+.btn{border:none;border-radius:14px;padding:13px 16px;min-height:48px;font-weight:700;width:100%}
+.btn.primary{background:var(--plum);color:var(--onplum)}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.row:last-child{border-bottom:none}
+.err{color:var(--danger);font-size:13px;margin-top:6px}
+
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-size:14px}
+.chip[aria-pressed=true]{background:var(--lilac);border-color:transparent;color:var(--lilacInk);font-weight:500}
+.stat:nth-child(2){background:var(--mint);color:var(--mintInk)}.stat:nth-child(3){background:var(--butterSoft);color:var(--butterInk)}
+.stat{background:var(--lilac);color:var(--lilacInk);border-radius:14px;padding:12px}
+.stat .v{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.2}
+.stat .l{font-size:12px;opacity:.85}
+.chartwrap{overflow-x:auto}
+svg text{font-family:var(--body);fill:var(--muted);font-size:10px}
+
+.entry .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.entry .wk{font-family:var(--display);font-weight:700;font-size:20px;display:inline-flex;align-items:center;gap:6px}
+.entry{border-top:4px solid var(--leaf)}.entry:nth-child(3n+2){border-top-color:var(--corn)}.entry:nth-child(3n){border-top-color:var(--butter)}
+.brand{display:flex;align-items:center;gap:6px}
+.thumbs{display:flex;gap:6px;margin-bottom:10px}
+.thumbs img{width:64px;height:84px;object-fit:cover;border-radius:10px;cursor:zoom-in}
+.delta{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--mint);color:var(--mintInk);margin-left:6px;white-space:nowrap}
+.acts{display:flex;gap:8px;margin-top:10px}
+.acts button{flex:1;min-height:40px;border-radius:12px;border:1px solid var(--line);background:transparent;font-size:14px}
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cmp img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px}
+.cmp .none{aspect-ratio:3/4;border-radius:12px;border:1.5px dashed var(--line);display:grid;place-items:center;font-size:12px;color:var(--muted)}
+.empty{text-align:center;padding:28px 12px}
+
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:5}
+nav .in{display:flex;gap:6px;max-width:560px;width:100%}
+nav button{flex:1;border:none;background:transparent;border-radius:12px;padding:10px 4px;font-weight:500;font-size:14px;color:var(--muted)}
+nav button[aria-current=page]{background:var(--lilac);color:var(--lilacInk)}
+.view{display:none}
+.view.on{display:block;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.view.on{animation:none}}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.toast.show{opacity:1}
+.overlay{position:fixed;inset:0;background:rgba(10,5,15,.75);display:none;align-items:center;justify-content:center;z-index:30;padding:20px}
+.overlay.show{display:flex}
+.overlay img{max-width:100%;max-height:85vh;border-radius:14px}
+.sheet{background:var(--card);border-radius:20px;padding:18px;width:100%;max-width:440px;max-height:85vh;overflow:auto}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;border:none;background:transparent;padding:9px;font-size:14px}
+.seg button[aria-pressed=true]{background:var(--lilac);color:var(--lilacInk);font-weight:500}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1 class="brand"><span id="brandBloom"></span>BodyBloom</h1>
+    <div style="display:flex;gap:8px">
+      <button class="iconbtn" id="themeBtn" aria-label="Switch light or dark mode">◐</button>
+      <button class="iconbtn" id="setBtn" aria-label="Open settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- LOG -->
+  <section class="view on" id="v-log">
+    <div class="tape" id="tape"></div>
+
+    <h2 id="formTitle">Log today</h2>
+    <div class="card stack">
+      <label class="f"><span>Date</span><input type="date" id="f-date"></label>
+      <div class="grid2">
+        <label class="f"><span id="lbl-weight">Weight (kg)</span><input type="number" inputmode="decimal" step="0.1" id="f-weight" placeholder="62.4"></label>
+        <label class="f"><span>Body fat (%)</span><input type="number" inputmode="decimal" step="0.1" id="f-fat" placeholder="24.1"></label>
+      </div>
+      <details id="measBox">
+        <summary>Measurements</summary>
+        <div class="grid2" id="measFields"></div>
+      </details>
+      <div>
+        <p class="small muted" style="margin:0 0 6px">Progress photos</p>
+        <div class="photos" id="photoSlots"></div>
+      </div>
+      <label class="f"><span>Note</span><textarea id="f-note" placeholder="Felt stronger on squats this week"></textarea></label>
+      <div id="formErr" class="err" hidden></div>
+      <button class="btn primary" id="saveBtn">Save entry</button>
+      <button class="btn ghost" id="cancelEdit" hidden>Cancel editing</button>
+    </div>
+
+    <h2>Recent</h2>
+    <div class="card" id="recent"></div>
+  </section>
+
+  <!-- TRENDS -->
+  <section class="view" id="v-trends">
+    <h2>Trends</h2>
+    <div class="chips" id="metricChips" role="group" aria-label="Choose measurement"></div>
+    <div class="chips" id="rangeChips" role="group" aria-label="Choose time range" style="margin-top:6px"></div>
+    <div class="grid2" id="stats" style="margin-top:12px"></div>
+    <div class="card" style="margin-top:12px">
+      <div class="chartwrap" id="chart"></div>
+    </div>
+  </section>
+
+  <!-- RECORD -->
+  <section class="view" id="v-record">
+    <h2>Compare</h2>
+    <div class="card stack" id="compareBox"></div>
+    <h2>Weekly record</h2>
+    <div class="stack" id="recordList"></div>
+  </section>
+</div>
+
+<nav><div class="in">
+  <button data-view="log" aria-current="page">Log</button>
+  <button data-view="trends">Trends</button>
+  <button data-view="record">Record</button>
+</div></nav>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="overlay" id="lightbox"><img alt="Progress photo, full size"></div>
+<div class="overlay" id="settings">
+  <div class="sheet stack" role="dialog" aria-label="Settings">
+    <h3>Settings</h3>
+    <div><p class="small muted" style="margin:0 0 6px">Weight unit</p>
+      <div class="seg" id="segW"><button data-u="kg">kg</button><button data-u="lb">lb</button></div></div>
+    <div><p class="small muted" style="margin:0 0 6px">Measurement unit</p>
+      <div class="seg" id="segL"><button data-u="cm">cm</button><button data-u="in">in</button></div></div>
+    <button class="btn ghost" id="exportBtn">Export backup</button>
+    <label class="btn ghost" style="display:block;text-align:center;cursor:pointer">Import backup<input type="file" id="importFile" accept="application/json" hidden></label>
+    <p class="small muted" style="margin:0">Your records live only on this phone. Export a backup every few weeks so nothing gets lost.</p>
+    <button class="btn danger" id="wipeBtn">Delete all records</button>
+    <button class="btn primary" id="closeSet">Done</button>
+  </div>
+</div>
+
+<script>
+const METRICS=[
+ {k:'weight',label:'Weight',t:'w'},{k:'fat',label:'Body fat',t:'pct'},
+ {k:'waist',label:'Waist',t:'len'},{k:'hips',label:'Hips',t:'len'},
+ {k:'chest',label:'Chest',t:'len'},{k:'arms',label:'Arms',t:'len'},{k:'thighs',label:'Thighs',t:'len'}];
+const MEAS=METRICS.filter(m=>m.t==='len');
+const ANGLES=['front','side','back'];
+const $=s=>document.querySelector(s);
+function fl(x,y,r,c,cen){let s='';for(let i=0;i<5;i++){const a=(i*72-90)*Math.PI/180;s+=`<circle cx="${(x+Math.cos(a)*r).toFixed(1)}" cy="${(y+Math.sin(a)*r).toFixed(1)}" r="${(r*.85).toFixed(1)}" fill="${c}"/>`}return s+`<circle cx="${x}" cy="${y}" r="${(r*.6).toFixed(1)}" fill="${cen}"/>`}
+function lf(x,y,rot){return `<ellipse cx="${x}" cy="${y}" rx="10" ry="4.5" fill="var(--leaf)" transform="rotate(${rot} ${x} ${y})"/>`}
+function bloom(sz,c){return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" aria-hidden="true">${fl(12,12,6,c||'var(--corn)','var(--butter)')}</svg>`}
+const MEADOW=`<svg class="flowers" viewBox="0 0 150 110" aria-hidden="true"><path d="M95 110 Q92 70 100 40 M125 110 Q128 80 122 62 M70 110 Q74 90 66 75" stroke="var(--leaf)" stroke-width="2.5" fill="none"/>${lf(88,80,-35)}${lf(112,88,30)}${lf(76,96,-20)}${lf(130,95,40)}${fl(100,36,13,'var(--petal)','var(--butter)')}${fl(122,60,9,'var(--corn)','var(--butter)')}${fl(66,72,8,'var(--butter)','#C94A33')}${fl(138,24,6,'var(--petal)','var(--butter)')}${fl(74,30,5,'var(--corn)','var(--petal)')}</svg>`;
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let S=Object.assign({w:'kg',l:'cm',theme:null},lsGet('bb-settings',{}));
+function saveS(){lsSet('bb-settings',S)}
+
+/* database */
+let db,entries=[];
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('bodybloom',1);r.onupgradeneeded=()=>r.result.createObjectStore('entries',{keyPath:'id'});r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>rej(r.error)})}
+function store(m){return db.transaction('entries',m).objectStore('entries')}
+function req(r){return new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function load(){entries=(await req(store('readonly').getAll())).sort((a,b)=>a.date.localeCompare(b.date)||a.created-b.created)}
+
+/* units */
+function disp(k,v){const m=METRICS.find(x=>x.k===k);if(m.t==='w'&&S.w==='lb')return v*2.20462;if(m.t==='len'&&S.l==='in')return v/2.54;return v}
+function toBase(k,v){const m=METRICS.find(x=>x.k===k);if(m.t==='w'&&S.w==='lb')return v/2.20462;if(m.t==='len'&&S.l==='in')return v*2.54;return v}
+function unit(k){const m=METRICS.find(x=>x.k===k);return m.t==='w'?' '+S.w:m.t==='pct'?'%':' '+S.l}
+function fmt(k,v){return disp(k,v).toFixed(1)+unit(k)}
+function fmtD(d,opt){return new Date(d+'T00:00').toLocaleDateString('en-GB',opt||{day:'numeric',month:'short',year:'numeric'})}
+function today(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+function weekNo(d){if(!entries.length)return 1;const f=+new Date(entries[0].date+'T00:00');return Math.floor((+new Date(d+'T00:00')-f)/6048e5)+1}
+
+/* theme */
+function applyTheme(){const t=S.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}
+$('#themeBtn').onclick=()=>{S.theme=document.documentElement.dataset.theme==='dark'?'light':'dark';saveS();applyTheme()};
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1800)}
+
+/* navigation */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+function show(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>{if(b.dataset.view===v)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});window.scrollTo(0,0);render()}
+
+/* form */
+let photos={},editing=null;
+function buildForm(){
+ $('#measFields').innerHTML=MEAS.map(m=>`<label class="f"><span>${m.label} (${S.l})</span><input type="number" inputmode="decimal" step="0.1" id="f-${m.k}"></label>`).join('');
+ $('#lbl-weight').textContent=`Weight (${S.w})`;
+ renderSlots();
+}
+function renderSlots(){
+ $('#photoSlots').innerHTML=ANGLES.map(a=>`<div class="ph">${photos[a]?`<img src="${photos[a]}" alt="${a} photo"><button class="x" data-rm="${a}" aria-label="Remove ${a} photo">✕</button>`:`<span>+<br>${a[0].toUpperCase()+a.slice(1)}</span><input type="file" accept="image/*" data-angle="${a}" aria-label="Add ${a} photo">`}</div>`).join('');
+ document.querySelectorAll('[data-angle]').forEach(i=>i.onchange=async()=>{if(!i.files[0])return;try{photos[i.dataset.angle]=await shrink(i.files[0]);renderSlots()}catch(e){toast('That photo could not be read. Try another.')}});
+ document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{delete photos[b.dataset.rm];renderSlots()});
+}
+function shrink(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const max=900,sc=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.78))};img.onerror=rej;img.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+function resetForm(){
+ editing=null;photos={};$('#f-date').value=today();
+ METRICS.forEach(m=>{const el=$('#f-'+m.k);if(el)el.value=''});$('#f-note').value='';
+ $('#formTitle').textContent='Log today';$('#saveBtn').textContent='Save entry';$('#cancelEdit').hidden=true;$('#formErr').hidden=true;$('#measBox').open=false;renderSlots();
+}
+function editEntry(id){
+ const e=entries.find(x=>x.id===id);if(!e)return;
+ editing=id;photos=Object.assign({},e.photos||{});$('#f-date').value=e.date;
+ METRICS.forEach(m=>{const el=$('#f-'+m.k);if(el)el.value=e[m.k]!=null?disp(m.k,e[m.k]).toFixed(1):''});
+ $('#f-note').value=e.note||'';$('#measBox').open=MEAS.some(m=>e[m.k]!=null);
+ $('#formTitle').textContent='Edit entry';$('#saveBtn').textContent='Update entry';$('#cancelEdit').hidden=false;
+ show('log');renderSlots();
+}
+$('#cancelEdit').onclick=resetForm;
+document.addEventListener('input',e=>{if(e.target.closest('#v-log'))$('#formErr').hidden=true});
+$('#saveBtn').onclick=async()=>{
+ const date=$('#f-date').value,err=$('#formErr');
+ if(!date){err.textContent='Choose a date first.';err.hidden=false;return}
+ const e={id:editing||('e'+Date.now()),date,created:editing?(entries.find(x=>x.id===editing)||{}).created||Date.now():Date.now(),note:$('#f-note').value.trim(),photos:Object.assign({},photos)};
+ let any=false;
+ for(const m of METRICS){const v=parseFloat($('#f-'+m.k).value);if(!isNaN(v)){if(v<=0){err.textContent=`${m.label} needs a number above zero.`;err.hidden=false;return}e[m.k]=+toBase(m.k,v).toFixed(2);any=true}}
+ if(!any&&!Object.keys(photos).length&&!e.note){err.textContent='Add at least one number, photo, or note.';err.hidden=false;return}
+ try{await req(store('readwrite').put(e))}catch(x){err.textContent='Saving failed. Your phone storage may be full.';err.hidden=false;return}
+ const was=editing;await load();resetForm();render();toast(was?'Entry updated':'Entry saved');
+};
+
+/* render */
+function render(){renderTape();renderRecent();renderTrends();renderRecord()}
+function latest(k){for(let i=entries.length-1;i>=0;i--)if(entries[i][k]!=null)return entries[i];return null}
+function renderTape(){
+ const lw=latest('weight'),wk=weekNo(today());
+ const big=lw?fmt('weight',lw.weight):'Week '+wk;
+ const sub=lw?`Week ${wk} of your record, last weighed ${fmtD(lw.date,{day:'numeric',month:'short'})}`:'Log your first entry to start the record';
+ const pos=Math.min(96,4+((wk-1)%12)*8);
+ $('#tape').innerHTML=MEADOW+`<div class="big">${esc(big)}</div><div class="sub">${esc(sub)}</div><div class="ruler" aria-hidden="true"><span class="mark" style="left:${pos}%">${bloom(22,'var(--petal)')}</span></div>`;
+}
+function renderRecent(){
+ const r=entries.slice(-5).reverse();
+ $('#recent').innerHTML=r.length?r.map(e=>`<div class="row"><span class="muted">${fmtD(e.date,{day:'numeric',month:'short'})}</span><span>${e.weight!=null?fmt('weight',e.weight):'·'}</span><span>${e.fat!=null?fmt('fat',e.fat):'·'}</span></div>`).join(''):`<div class="empty muted">Your entries show up here once you save one.</div>`;
+}
+
+let tMetric='weight',tRange='all';
+function renderTrends(){
+ $('#metricChips').innerHTML=METRICS.map(m=>`<button class="chip" aria-pressed="${m.k===tMetric}" data-m="${m.k}">${m.label}</button>`).join('');
+ $('#rangeChips').innerHTML=[['4','4 weeks'],['12','12 weeks'],['all','All time']].map(([v,l])=>`<button class="chip" aria-pressed="${v===tRange}" data-r="${v}">${l}</button>`).join('');
+ document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{tMetric=b.dataset.m;renderTrends()});
+ document.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{tRange=b.dataset.r;renderTrends()});
+ let pts=entries.filter(e=>e[tMetric]!=null).map(e=>({d:e.date,v:e[tMetric]}));
+ if(pts.length&&tRange!=='all'){const end=+new Date(pts[pts.length-1].d+'T00:00'),start=end-(+tRange)*6048e5;pts=pts.filter(p=>+new Date(p.d+'T00:00')>=start)}
+ if(!pts.length){$('#stats').innerHTML='';$('#chart').innerHTML=`<div class="empty muted">No ${METRICS.find(m=>m.k===tMetric).label.toLowerCase()} logged yet. Add it on the Log tab.</div>`;return}
+ const first=pts[0].v,last=pts[pts.length-1].v,ch=disp(tMetric,last)-disp(tMetric,first);
+ const lo=Math.min(...pts.map(p=>p.v)),hi=Math.max(...pts.map(p=>p.v));
+ $('#stats').innerHTML=[
+  ['Latest',fmt(tMetric,last)],
+  ['Change',(ch>0?'+':'')+ch.toFixed(1)+unit(tMetric)],
+  ['Lowest',fmt(tMetric,lo)],
+  ['Highest',fmt(tMetric,hi)]
+ ].map(([l,v])=>`<div class="stat"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+ $('#chart').innerHTML=chartSVG(pts);
+}
+function chartSVG(pts){
+ if(pts.length<2)return `<div class="empty muted">Log one more entry to draw the line.</div>`;
+ const W=340,H=190,pl=40,pr=14,pt=14,pb=28;
+ const xs=pts.map(p=>+new Date(p.d+'T00:00')),vs=pts.map(p=>disp(tMetric,p.v));
+ const x0=Math.min(...xs),x1=Math.max(...xs)||x0+1;let v0=Math.min(...vs),v1=Math.max(...vs);const pad=(v1-v0)*.18||1;v0-=pad;v1+=pad;
+ const X=x=>pl+(x-x0)/((x1-x0)||1)*(W-pl-pr),Y=v=>pt+(1-(v-v0)/(v1-v0))*(H-pt-pb);
+ let g='';for(let i=0;i<=3;i++){const v=v0+(v1-v0)*i/3,y=Y(v);g+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${pl-6}" y="${y+3}" text-anchor="end">${v.toFixed(1)}</text>`}
+ const line=pts.map((p,i)=>`${X(xs[i]).toFixed(1)},${Y(vs[i]).toFixed(1)}`).join(' ');
+ const area=`${X(xs[0])},${H-pb} ${line} ${X(xs[xs.length-1])},${H-pb}`;
+ const dots=pts.map((p,i)=>`<g><title>${fmtD(p.d)}: ${vs[i].toFixed(1)}${unit(tMetric)}</title>${fl(+X(xs[i]).toFixed(1),+Y(vs[i]).toFixed(1),i===pts.length-1?5.5:3.5,['var(--plum)','var(--corn)','var(--butter)'][i%3],i%3===2?'var(--plum)':'var(--butter)')}</g>`).join('');
+ const vine=pts.map((p,i)=>i%2?'':lf(+X(xs[i]).toFixed(1),H-pb-5,i%4?25:-25)).join('');
+ return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${METRICS.find(m=>m.k===tMetric).label} over time">${g}<polygon points="${area}" fill="var(--mint)" opacity=".8"/>${vine}<polyline points="${line}" fill="none" stroke="var(--leaf)" stroke-width="2.5" stroke-linejoin="round"/>${dots}<text x="${pl}" y="${H-8}">${fmtD(pts[0].d,{day:'numeric',month:'short'})}</text><text x="${W-pr}" y="${H-8}" text-anchor="end">${fmtD(pts[pts.length-1].d,{day:'numeric',month:'short'})}</text></svg>`;
+}
+
+let cA=null,cB=null,cAngle='front';
+function renderRecord(){
+ const list=$('#recordList');
+ if(!entries.length){list.innerHTML=`<div class="card empty muted">Every entry you save becomes a page in your weekly record.</div>`;$('#compareBox').innerHTML=`<p class="muted small" style="margin:0">Save two entries to compare them side by side.</p>`;return}
+ list.innerHTML=entries.slice().reverse().map(e=>{
+  const idx=entries.indexOf(e);
+  const rows=METRICS.filter(m=>e[m.k]!=null).map(m=>{let prev=null;for(let i=idx-1;i>=0;i--)if(entries[i][m.k]!=null){prev=entries[i][m.k];break}
+   const d=prev!=null?disp(m.k,e[m.k])-disp(m.k,prev):null;
+   return `<div class="row"><span class="muted">${m.label}</span><span>${fmt(m.k,e[m.k])}${d!=null&&Math.abs(d)>=.05?`<span class="delta">${d>0?'+':''}${d.toFixed(1)}</span>`:''}</span></div>`}).join('');
+  const th=ANGLES.filter(a=>e.photos&&e.photos[a]).map(a=>`<img src="${e.photos[a]}" alt="${a} photo, ${fmtD(e.date)}" data-zoom>`).join('');
+  return `<article class="card entry"><div class="top"><span class="wk">${bloom(20,['var(--corn)','var(--plum)','var(--butter)'][weekNo(e.date)%3])}Week ${weekNo(e.date)}</span><span class="small muted">${fmtD(e.date)}</span></div>${th?`<div class="thumbs">${th}</div>`:''}${rows}${e.note?`<p style="margin:10px 0 0">${esc(e.note)}</p>`:''}<div class="acts"><button data-edit="${e.id}">Edit</button><button data-del="${e.id}">Delete</button></div></article>`}).join('');
+ list.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editEntry(b.dataset.edit));
+ list.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{if(!confirm('Delete this entry? This cannot be undone.'))return;await req(store('readwrite').delete(b.dataset.del));await load();render();toast('Entry deleted')});
+ list.querySelectorAll('[data-zoom]').forEach(i=>i.onclick=()=>zoom(i.src));
+ renderCompare();
+}
+function renderCompare(){
+ const box=$('#compareBox');
+ if(entries.length<2){box.innerHTML=`<p class="muted small" style="margin:0">Save two entries to compare them side by side.</p>`;return}
+ if(!entries.find(e=>e.id===cA))cA=entries[0].id;if(!entries.find(e=>e.id===cB))cB=entries[entries.length-1].id;
+ const opts=sel=>entries.map(e=>`<option value="${e.id}" ${e.id===sel?'selected':''}>Week ${weekNo(e.date)}, ${fmtD(e.date,{day:'numeric',month:'short'})}</option>`).join('');
+ const A=entries.find(e=>e.id===cA),B=entries.find(e=>e.id===cB);
+ const pic=e=>e.photos&&e.photos[cAngle]?`<img src="${e.photos[cAngle]}" alt="${cAngle} photo" data-zoom>`:`<div class="none">No ${cAngle} photo</div>`;
+ const rows=METRICS.filter(m=>A[m.k]!=null&&B[m.k]!=null).map(m=>{const d=disp(m.k,B[m.k])-disp(m.k,A[m.k]);return `<div class="row"><span class="muted">${m.label}</span><span>${fmt(m.k,A[m.k])} to ${fmt(m.k,B[m.k])}<span class="delta">${d>0?'+':''}${d.toFixed(1)}</span></span></div>`}).join('');
+ box.innerHTML=`<div class="grid2"><select id="cA" aria-label="First entry">${opts(cA)}</select><select id="cB" aria-label="Second entry">${opts(cB)}</select></div>
+ <div class="seg" id="cAng">${ANGLES.map(a=>`<button aria-pressed="${a===cAngle}" data-a="${a}">${a[0].toUpperCase()+a.slice(1)}</button>`).join('')}</div>
+ <div class="cmp">${pic(A)}${pic(B)}</div>${rows||'<p class="small muted" style="margin:0">These two entries share no measurements yet.</p>'}`;
+ $('#cA').onchange=e=>{cA=e.target.value;renderCompare()};$('#cB').onchange=e=>{cB=e.target.value;renderCompare()};
+ box.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{cAngle=b.dataset.a;renderCompare()});
+ box.querySelectorAll('[data-zoom]').forEach(i=>i.onclick=()=>zoom(i.src));
+}
+function zoom(src){const l=$('#lightbox');l.querySelector('img').src=src;l.classList.add('show')}
+$('#lightbox').onclick=()=>$('#lightbox').classList.remove('show');
+
+/* settings */
+function renderSeg(){document.querySelectorAll('#segW button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.u===S.w));document.querySelectorAll('#segL button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.u===S.l))}
+$('#setBtn').onclick=()=>{renderSeg();$('#settings').classList.add('show')};
+$('#closeSet').onclick=()=>$('#settings').classList.remove('show');
+$('#settings').onclick=e=>{if(e.target.id==='settings')$('#settings').classList.remove('show')};
+document.querySelectorAll('#segW button').forEach(b=>b.onclick=()=>{S.w=b.dataset.u;saveS();renderSeg();buildForm();resetForm();render()});
+document.querySelectorAll('#segL button').forEach(b=>b.onclick=()=>{S.l=b.dataset.u;saveS();renderSeg();buildForm();resetForm();render()});
+$('#exportBtn').onclick=()=>{
+ const blob=new Blob([JSON.stringify({app:'bodybloom',version:1,exported:new Date().toISOString(),settings:S,entries})],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`bodybloom-backup-${today()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast('Backup downloaded');
+};
+$('#importFile').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{const data=JSON.parse(await f.text());if(data.app!=='bodybloom'||!Array.isArray(data.entries))throw 0;
+  const s=store('readwrite');for(const en of data.entries)if(en&&en.id&&en.date)s.put(en);
+  await new Promise(r=>s.transaction.oncomplete=r);await load();render();toast(`${data.entries.length} entries imported`);$('#settings').classList.remove('show');
+ }catch(x){toast('That file is not a BodyBloom backup.')}
+ e.target.value='';
+};
+$('#wipeBtn').onclick=async()=>{if(!confirm('Delete every record and photo? Export a backup first if you want to keep them.'))return;await req(store('readwrite').clear());await load();render();toast('All records deleted');$('#settings').classList.remove('show')};
+
+/* start */
+applyTheme();
+$('#brandBloom').innerHTML=bloom(26,'var(--plum)');
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(!S.theme)applyTheme()});
+buildForm();
+openDB().then(load).then(()=>{resetForm();render()}).catch(()=>{toast('Storage is unavailable in this browser.');resetForm();render()});
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
